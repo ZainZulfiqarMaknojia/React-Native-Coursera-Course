@@ -2,23 +2,28 @@ import React, { Component } from 'react';
 import { Card , ListItem } from 'react-native-elements';
 import { View , ScrollView, Text ,Image , FlatList} from 'react-native';
 import { LEADERS } from '../shared/leaders';
+import { connect } from 'react-redux';
+import { baseUrl } from '../shared/baseUrl';
+import { Loading } from './LoadingComponent';
+
+
+
+const mapStateToProps = state => {
+    return {
+      leaders: state.leaders
+    }
+}  
 
 class About extends Component{
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            leaders: LEADERS
-        };
-    }    
-    
+   
     static navigationOptions = {
         title: 'About'
     };
 
     render(){
 
-            const Leaders= this.state.leaders.map((Leaders)=>{
+            const Leaders= this.props.leaders.leaders.map((Leaders)=>{
+                
                 return (
                     <ListItem
                     key = {Leaders.id}
@@ -26,7 +31,7 @@ class About extends Component{
                     subtitle={
                         <Text>{Leaders.description}</Text>} 
                     hideChevron={true}
-                    leftAvatar={{source: require('./images/alberto.png')}}/>                   
+                    leftAvatar={{source:{uri: baseUrl + Leaders.image}}}/>                   
                 );
             });
         return(
@@ -49,4 +54,4 @@ class About extends Component{
     }
 }
 
-export default About;
+export default connect(mapStateToProps)(About);

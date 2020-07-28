@@ -1,5 +1,5 @@
 Arguments: 
-  D:\NodeJs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add react-native-animatable@1.2.4 --save
+  D:\NodeJs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add redux-persist@5.9.1 --save
 
 PATH: 
   C:\Users\z1736\bin;D:\Git\mingw64\bin;D:\Git\usr\local\bin;D:\Git\usr\bin;D:\Git\usr\bin;D:\Git\mingw64\bin;D:\Git\usr\bin;C:\Users\z1736\bin;C:\Python38\Scripts;C:\Python38;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Windows\System32\OpenSSH;C:\ProgramData\chocolatey\bin;D:\Git\cmd;C:\Python38\Scripts;C:\Program Files (x86)\Yarn\bin;C:\Windows\System32;D:\NodeJs;C:\Users\z1736\anaconda3;C:\Users\z1736\anaconda3\Library\mingw-w64\bin;C:\Users\z1736\anaconda3\Library\usr\bin;C:\Users\z1736\anaconda3\Library\bin;C:\Users\z1736\anaconda3\Scripts;C:\Users\z1736\AppData\Local\Programs\Python\Python38-32\Scripts;C:\Users\z1736\AppData\Local\Programs\Python\Python38-32;C:\Users\z1736\AppData\Local\Microsoft\WindowsApps;D:\Microsoft VS Code\bin;C:\Users\z1736\AppData\Local\Yarn\bin;C:\Users\z1736\AppData\Roaming\npm;D:\Git\usr\bin\vendor_perl;D:\Git\usr\bin\core_perl
@@ -14,7 +14,7 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: EPERM: operation not permitted, unlink 'C:\Users\z1736\Desktop\RN\RN\React-Native-Coursera-Course\node_modules\@babel\generator\node_modules\.bin'
+  Error: EPERM: operation not permitted, unlink 'C:\Users\z1736\Desktop\RN\RN\React-Native-Coursera-Course\node_modules\@babel\compat-data\node_modules\.bin'
 
 npm manifest: 
   {
@@ -32,6 +32,7 @@ npm manifest:
       "react": "~16.11.0",
       "react-dom": "~16.11.0",
       "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
+      "react-native-animatable": "1.2.4",
       "react-native-datepicker": "1.7.2",
       "react-native-elements": "^2.0.4",
       "react-native-swipeout": "2.3.3",
@@ -4656,6 +4657,13 @@ Lockfile:
     version "3.0.4"
     resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
     integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
+  
+  react-native-animatable@1.2.4:
+    version "1.2.4"
+    resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-1.2.4.tgz#b5fb7657e8f6edadbc26697057a327fb920b3039"
+    integrity sha512-cVTQXa/cp8gfxcl+l6I1rGAI7EeoNZ0ur9vtxb3tD5iGlJbIyUfQK61e6BycnZewdgQ639Mp6OrueXTpZlv76Q==
+    dependencies:
+      prop-types "^15.5.10"
   
   react-native-appearance@~0.3.3:
     version "0.3.4"

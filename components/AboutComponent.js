@@ -5,6 +5,7 @@ import { LEADERS } from '../shared/leaders';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import { Loading } from './LoadingComponent';
+import * as Animatable from 'react-native-animatable';
 
 
 
@@ -36,6 +37,7 @@ class About extends Component{
             });
         return(
             <ScrollView>
+                <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>            
                 <Card title= "Our History">
                     <Text
                         style={{margin: 10}}>
@@ -46,9 +48,13 @@ class About extends Component{
                         The restaurant traces its humble beginnings to The Frying Pan, a successful chain started by our CEO, Mr. Peter Pan, that featured for the first time the world's best cuisines in a pan.   
                     </Text>                             
                 </Card> 
+                </Animatable.View> 
+                <Animatable.View animation="fadeInUp" duration={2000} delay={1000}>
                 <Card title= "Corporate Leadership">
                     {Leaders}
-                </Card> 
+                </Card>
+                </Animatable.View>
+                
             </ScrollView>      
         );
     }

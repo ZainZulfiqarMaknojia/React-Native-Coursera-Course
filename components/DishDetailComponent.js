@@ -1,12 +1,12 @@
 import React ,{ Component } from 'react';
-import { Text, View , ScrollView, FlatList ,Modal, StyleSheet , Button} from 'react-native';
+import { Text, View , ScrollView, FlatList ,Modal, StyleSheet , Button , Alert, PanResponder} from 'react-native';
 import { Card , Icon , Input  ,Rating, AirbnbRating } from 'react-native-elements';
 import { DISHES } from '../shared/dishes';
 import { COMMENTS } from '../shared/comments';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import { postFavorite , postComment} from '../redux/ActionCreators';
-
+import * as Animatable from 'react-native-animatable';
 const mapStateToProps = state => {
     return {
       dishes: state.dishes,
@@ -33,6 +33,7 @@ class Dishdetail extends Component {
         }
     }
     toggleModal() {
+        console.log("I am Called");
         this.setState({showModal: !this.state.showModal});
     }
 
@@ -40,7 +41,8 @@ class Dishdetail extends Component {
         console.log(JSON.stringify(this.state));
         this.props.postComment(dishId, this.state.rating, this.state.comment, this.state.Author);
         this.toggleModal();
-    }        
+    }   
+         
 
     markFavorite(dishId) {
         this.props.postFavorite(dishId);
@@ -119,6 +121,7 @@ function RenderComments(props) {
     };
     
     return (
+        <Animatable.View animation="fadeInUp" duration={2000} delay={1000}>
         <Card title='Comments' >
         <FlatList 
             data={comments}
@@ -126,15 +129,58 @@ function RenderComments(props) {
             keyExtractor={item => item.id.toString()}
             />
         </Card>
+        </Animatable.View>
+
     );
 }
 
 function RenderDish(props) {
 
     const dish = props.dish;
+    var ViewRef;
+    const handleViewRef = ref => ViewRef = ref;
+    const recognizeDrag = ({ moveX, moveY, dx, dy }) => {
+        if ( dx < -200 )
+            return true;
+        else
+            return false;
+    }
+    const recognizeComment = ({ moveX, moveY, dx, dy }) => {
+        if ( dx > 0 )
+            return true;
+        else
+            return false;
+    }
+
+    const panResponder = PanResponder.create({
+        onStartShouldSetPanResponder: (e, gestureState) => {
+            return true;
+        },onPanResponderGrant: () => {
+            ViewRef.rubberBand(1000).then(endState => console.log(endState.finished ? 'finished' : 'cancelled'));
+        },
+        onPanResponderEnd: (e, gestureState) => {
+            console.log("pan responder end", gestureState);
+            if (recognizeDrag(gestureState))
+                Alert.alert(
+                    'Add Favorite',
+                    'Are you sure you wish to add ' + dish.name + ' to favorite?',
+                    [
+                    {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                    {text: 'OK', onPress: () => {props.favorite ? console.log('Already favorite') : props.onPress()}},
+                    ],
+                    { cancelable: false }
+                );
+            else if (recognizeComment(gestureState)) 
+            {props.toggleModal();}               
+            return true;
+        }
+    })
     
         if (dish != null) {
             return(
+                <Animatable.View animation="fadeInDown" duration={2000} delay={1000} 
+                ref={handleViewRef} 
+                {...panResponder.panHandlers}>
                 <Card
                 featuredTitle={dish.name}
                 image={{uri: baseUrl + dish.image}}>
@@ -157,6 +203,7 @@ function RenderDish(props) {
                     color='#512DA8'
                     onPress={() => {props.toggleModal();}}/>                     
                 </Card>
+                </Animatable.View>
             );
         }
         else {

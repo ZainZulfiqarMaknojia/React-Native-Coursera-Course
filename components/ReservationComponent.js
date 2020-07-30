@@ -3,6 +3,9 @@ import { Text, View, ScrollView, StyleSheet, Picker, Switch, Button , Alert } fr
 import { Card } from 'react-native-elements';
 import DatePicker from 'react-native-datepicker';
 import * as Animatable from 'react-native-animatable';
+import * as Permissions from 'expo-permissions';
+import * as Notifications from 'expo-notifications';
+import * as Calendar from 'expo-calendar';
 class Reservation extends Component {
 
     constructor(props) {
@@ -33,7 +36,8 @@ class Reservation extends Component {
                 },
                 {
                     text: 'OK',
-                    onPress: () => this.resetForm()
+                    onPress: () =>{this.presentLocalNotification(this.state.date);
+                        this.resetForm();} 
                 }
             ],
             { cancelable: false }
@@ -48,7 +52,70 @@ class Reservation extends Component {
             showModal: false
         });
     }
-    
+    async obtainNotificationPermission() {
+        let permission = await Permissions.getAsync(Permissions.USER_FACING_NOTIFICATIONS);
+        if (permission.status !== 'granted') {
+            permission = await Permissions.askAsync(Permissions.USER_FACING_NOTIFICATIONS);
+            if (permission.status !== 'granted') {
+                Alert.alert('Permission not granted to show notifications');
+            }
+        }
+        return permission;
+    }
+
+    async presentLocalNotification(date) {
+        await this.obtainNotificationPermission();
+        Notifications.presentLocalNotificationAsync({
+            title: 'Your Reservation',
+            body: 'Reservation for '+ date + ' requested',
+            ios: {
+                sound: true
+            },
+            android: {
+                sound: true,
+                vibrate: true,
+                color: '#512DA8'
+            }
+        });
+    }
+    async obtainCalendarPermission () {
+        let permission = await Calendar.requestCalendarPermissionsAsync();
+        if (permission !== 'granted') {
+            let permission = await Calendar.requestCalendarPermissionsAsync();
+            if (permission !== 'granted') {
+                Alert.alert('Permission not granted to add to calender');
+            }
+        }
+    } 
+    async addReservationToCalendar(date) {
+        const calendars = await this.obtainCalendarPermission();
+        Calendar.createEventAsync({
+            title: "Con Fusion Table Reservation",
+            startDate: Date(Date.parse(date)),
+            endDate: Date(Date.parse(date + (2 * 60 * 60 * 1000))),
+            location: "121, Clear Water Bay Road, Clear Water Bay, Kowloon, Hong Kong",
+            timeZone: "Asia/Hong_Kong"
+        })
+      }
+      
+      async createEventAsync() {
+        const defaultCalendarSource =
+          Platform.OS === 'ios'
+            ? await addReservationToCalendar()
+            : { isLocalAccount: true, name: 'Expo Calendar' };
+        const newCalendarID = await Calendar.createCalendarAsync({
+          title: 'Con Fusion Table Reservation',
+          color: 'blue',
+          entityType: Calendar.EntityTypes.EVENT,
+          sourceId: defaultCalendarSource.id,
+          source: defaultCalendarSource,
+          name: 'internalCalendarName',
+          ownerAccount: 'personal',
+          accessLevel: Calendar.CalendarAccessLevel.OWNER,
+        });
+        console.log(`Your new calendar ID is: ${newCalendarID}`);
+      }
+
     render() {
         return(
             <ScrollView>

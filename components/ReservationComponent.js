@@ -37,6 +37,7 @@ class Reservation extends Component {
                 {
                     text: 'OK',
                     onPress: () =>{this.presentLocalNotification(this.state.date);
+                        this.addReservationToCalendar(this.state.date);
                         this.resetForm();} 
                 }
             ],
@@ -78,18 +79,21 @@ class Reservation extends Component {
             }
         });
     }
-    async obtainCalendarPermission () {
-        let permission = await Calendar.requestCalendarPermissionsAsync();
-        if (permission !== 'granted') {
-            let permission = await Calendar.requestCalendarPermissionsAsync();
-            if (permission !== 'granted') {
-                Alert.alert('Permission not granted to add to calender');
+    async obtainCalendarPermission() {
+        let permission = await Permissions.getAsync(Permissions.CALENDAR);
+        if (permission.status !== 'granted') {
+            permission = await Permissions.askAsync(Permissions.CALENDAR);
+            if (permission.status !== 'granted') {
+                Alert.alert('Permission not granted to calendar');
             }
+
         }
-    } 
+        Alert.alert('Permission granted to calendar');
+        return permission;
+    }
     async addReservationToCalendar(date) {
         const calendars = await this.obtainCalendarPermission();
-        Calendar.createEventAsync({
+        Calendar.createEventAsync('1',{
             title: "Con Fusion Table Reservation",
             startDate: Date(Date.parse(date)),
             endDate: Date(Date.parse(date + (2 * 60 * 60 * 1000))),
@@ -98,23 +102,6 @@ class Reservation extends Component {
         })
       }
       
-      async createEventAsync() {
-        const defaultCalendarSource =
-          Platform.OS === 'ios'
-            ? await addReservationToCalendar()
-            : { isLocalAccount: true, name: 'Expo Calendar' };
-        const newCalendarID = await Calendar.createCalendarAsync({
-          title: 'Con Fusion Table Reservation',
-          color: 'blue',
-          entityType: Calendar.EntityTypes.EVENT,
-          sourceId: defaultCalendarSource.id,
-          source: defaultCalendarSource,
-          name: 'internalCalendarName',
-          ownerAccount: 'personal',
-          accessLevel: Calendar.CalendarAccessLevel.OWNER,
-        });
-        console.log(`Your new calendar ID is: ${newCalendarID}`);
-      }
 
     render() {
         return(
